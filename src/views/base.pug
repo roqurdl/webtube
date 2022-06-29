@@ -6,6 +6,9 @@ html(lang="ko")
     body
         header
             h1=pageTitle
+            if pageTitle !== "Home" 
+                nav 
+                    a(href="/") Home
             block link
         main
             block content
