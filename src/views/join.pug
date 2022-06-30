@@ -1,0 +1,10 @@
+extends base.pug
+
+block content 
+    form(method="POST")
+       input(name="email", placeholder="Write Email", type="email", required)
+       input(name="username", placeholder="Write Username", type="text", required)
+       input(name="password", placeholder="Write Password", type="password", required)
+       input(name="name", placeholder="Write your Name", type="text", required)
+       input(name="location", placeholder="Write Location", type="text" required)
+       input(type="submit" value="Join")

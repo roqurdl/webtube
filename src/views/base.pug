@@ -17,6 +17,10 @@ html(lang="ko")
                     if pageTitle !== "Search Videos"
                         li 
                             a(href="/search") Search
+                    if pageTitle !== "Join"
+                        li 
+                            a(href="/join") Join
+                    
         main
             block content
     include partials/footer
