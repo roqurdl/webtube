@@ -6,10 +6,17 @@ html(lang="ko")
     body
         header
             h1=pageTitle
-            if pageTitle !== "Home" 
-                nav 
-                    a(href="/") Home
-            block link
+            nav
+                ul 
+                    if pageTitle !== "Home" 
+                        li
+                            a(href="/") Home
+                    if pageTitle !== "Uploading Video"
+                        li 
+                            a(href="/videos/upload") Upload Video
+                    if pageTitle !== "Search Videos"
+                        li 
+                            a(href="/search") Search
         main
             block content
     include partials/footer
