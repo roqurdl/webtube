@@ -20,29 +20,39 @@ export const postJoin = async (req, res) => {
       errorMessage: "This username/email is already taken.",
     });
   }
-
-  await User.create({
-    name,
-    username,
-    email,
-    password,
-    location,
-  });
-  res.redirect("/login");
+  try {
+    await User.create({
+      name,
+      username,
+      email,
+      password,
+      location,
+    });
+    res.redirect("/login");
+  } catch (error) {
+    return res.status(400).render("join", {
+      pageTitle,
+      errorMessage: error._message,
+    });
+  }
 };
 
-export const edit = (req, res) => {
-  res.render("Edit User");
+export const getLogin = (req, res) => {
+  res.render("login", { pageTitle: "Login" });
 };
-export const remove = (req, res) => {
-  res.render("Delete User");
-};
-export const login = (req, res) => {
+export const postLogin = (req, res) => {
   res.render("login", { pageTitle: "Login" });
 };
 export const logout = (req, res) => {
   res.render("Log out");
 };
+
 export const see = (req, res) => {
   res.render("See User");
+};
+export const edit = (req, res) => {
+  res.render("Edit User");
+};
+export const remove = (req, res) => {
+  res.render("Delete User");
 };
