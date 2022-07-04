@@ -1,25 +1,35 @@
 doctype html
 html(lang="ko")
     head
-        title #{pageTitle} | Webtube
+        title #{pageTitle} | #{siteName}
         link(rel="stylesheet" href="https://unpkg.com/mvp.css")
     body
         header
             h1=pageTitle
             nav
                 ul 
-                    if pageTitle !== "Home" 
-                        li
-                            a(href="/") Home
-                    if pageTitle !== "Uploading Video"
+                    li
+                        a(href="/") Home
+                    if loggedIn
                         li 
-                            a(href="/videos/upload") Upload Video
+                            a(href="/logout") Log out
+                        li 
+                            a(href="/myProfile") #{loggedInUser.name}'s Profile
+                    else
+                        if pageTitle !== "Join"
+                                li 
+                                    a(href="/join") Join
+
+                        if pageTitle !== "Login"
+                                li 
+                                    a(href="/login") Login
                     if pageTitle !== "Search Videos"
                         li 
                             a(href="/search") Search
-                    if pageTitle !== "Join"
+
+                    if pageTitle !== "Uploading Video"
                         li 
-                            a(href="/join") Join
+                            a(href="/videos/upload") Upload Video
                     
         main
             block content
