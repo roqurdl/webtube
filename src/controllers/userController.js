@@ -6,7 +6,6 @@ export const getJoin = (req, res) => {
 };
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
-
   const pageTitle = "Join";
   if (password !== password2) {
     return res.status(400).render("join", {
