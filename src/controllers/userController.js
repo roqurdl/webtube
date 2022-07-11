@@ -138,12 +138,13 @@ export const logout = (req, res) => {
   return res.redirect("/");
 };
 
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+
 export const see = (req, res) => {
   res.render("See User");
-};
-export const edit = (req, res) => {
-  res.render("Edit User");
-};
-export const remove = (req, res) => {
-  res.render("Delete User");
 };
