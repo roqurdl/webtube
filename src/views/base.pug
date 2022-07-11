@@ -12,6 +12,8 @@ html(lang="ko")
                         a(href="/") Home
                     if loggedIn
                         li 
+                           a(href="/videos/upload") Upload Video
+                        li 
                             a(href="/users/edit") Edit Profile
                         li 
                             a(href="/users/logout") Log out
@@ -27,9 +29,7 @@ html(lang="ko")
                         li 
                             a(href="/search") Search
 
-                    if pageTitle !== "Uploading Video"
-                        li 
-                            a(href="/videos/upload") Upload Video
+                    
                     
         main
             block content
