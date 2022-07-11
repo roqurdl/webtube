@@ -2,6 +2,8 @@ import User from "../models/User";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
+const HTTP_ERROR_REQUEST = 400;
+
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "Join" });
 };
@@ -9,14 +11,14 @@ export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
   const pageTitle = "Join";
   if (password !== password2) {
-    return res.status(400).render("join", {
+    return res.status(HTTP_ERROR_REQUEST).render("join", {
       pageTitle,
       errorMessage: "Password confirmation does not match",
     });
   }
   const exists = await User.exists({ $or: [{ username }, { email }] });
   if (exists) {
-    return res.status(400).render("join", {
+    return res.status(HTTP_ERROR_REQUEST).render("join", {
       pageTitle,
       errorMessage: "This username/email is already taken.",
     });
@@ -31,7 +33,7 @@ export const postJoin = async (req, res) => {
     });
     res.redirect("/login");
   } catch (error) {
-    return res.status(400).render("join", {
+    return res.status(HTTP_ERROR_REQUEST).render("join", {
       pageTitle,
       errorMessage: error._message,
     });
@@ -47,12 +49,12 @@ export const postLogin = async (req, res) => {
   const pageTitle = "Login";
   const OK = await bcrypt.compare(password, user.password);
   if (!user) {
-    return res.status(400).render("login", {
+    return res.status(HTTP_ERROR_REQUEST).render("login", {
       pageTitle,
       errorMessage: "An account with this username does not exists.",
     });
   } else if (!OK) {
-    return res.status(400).render("login", {
+    return res.status(HTTP_ERROR_REQUEST).render("login", {
       pageTitle,
       errorMessage: "Wrong Password.",
     });
@@ -65,7 +67,7 @@ export const postLogin = async (req, res) => {
 export const startGithubLogin = (req, res) => {
   const baseUrl = `https://github.com/login/oauth/authorize`;
   const config = {
-    client_id: process.env.GH_CLIENT,
+    client_id: pprocess.env.GH_CLIENT,
     allow_signup: false,
     scope: "read:uwer user:email",
   };
@@ -76,8 +78,8 @@ export const startGithubLogin = (req, res) => {
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = `https://github.com/login/oauth/access_token`;
   const config = {
-    client_id: process.env.GH_CLIENT,
-    client_secret: process.env.GH_SECRET,
+    client_id: pprocess.env.GH_CLIENT,
+    client_secret: pprocess.env.GH_SECRET,
     code: req.query.code,
   };
   const params = new URLSearchParams(config).toString();
@@ -144,13 +146,30 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, email: sessionEmail, username: sessionUsername },
     },
     body: { name, email, username, location },
   } = req;
-  await User.findByIdAndUpdate(_id, { name, email, username, location });
-
-  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+  let check = [];
+  if (sessionEmail == email || sessionUsername == username) {
+    check.push({ sessionEmail });
+  }
+  if (check.length > 0) {
+    const findUser = await User.findOne({ $or: check });
+    if (findUser._id.toString() === _id) {
+      return res.status(HTTP_ERROR_REQUEST).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This username/email is already taken.",
+      });
+    }
+  }
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    { name, email, username, location },
+    { new: true }
+  );
+  req.session.user = updateUser;
+  return res.redirect("/users/edit");
 };
 
 export const see = (req, res) => {
