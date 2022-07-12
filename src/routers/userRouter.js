@@ -6,12 +6,19 @@ import {
   see,
   startGithubLogin,
   finishGithubLogin,
+  getChangePw,
+  postChangePw,
 } from "../controllers/userController";
 import { protectMiddleware, publicOnlyMiddleware } from "../middlewares";
 const userRouter = express.Router();
 
 userRouter.get("/logout", protectMiddleware, logout);
 userRouter.route("/edit").all(protectMiddleware).get(getEdit).post(postEdit);
+userRouter
+  .route("/change-password")
+  .all(protectMiddleware)
+  .get(getChangePw)
+  .post(postChangePw);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get("/:id", see);

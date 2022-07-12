@@ -67,7 +67,7 @@ export const postLogin = async (req, res) => {
 export const startGithubLogin = (req, res) => {
   const baseUrl = `https://github.com/login/oauth/authorize`;
   const config = {
-    client_id: pprocess.env.GH_CLIENT,
+    client_id: process.env.GH_CLIENT,
     allow_signup: false,
     scope: "read:uwer user:email",
   };
@@ -78,8 +78,8 @@ export const startGithubLogin = (req, res) => {
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = `https://github.com/login/oauth/access_token`;
   const config = {
-    client_id: pprocess.env.GH_CLIENT,
-    client_secret: pprocess.env.GH_SECRET,
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
     code: req.query.code,
   };
   const params = new URLSearchParams(config).toString();
@@ -150,12 +150,12 @@ export const postEdit = async (req, res) => {
     },
     body: { name, email, username, location },
   } = req;
-  let check = [];
+  let dbCheck = [];
   if (sessionEmail == email || sessionUsername == username) {
-    check.push({ sessionEmail });
+    dbCheck.push({ sessionEmail });
   }
-  if (check.length > 0) {
-    const findUser = await User.findOne({ $or: check });
+  if (dbCheck.length > 0) {
+    const findUser = await User.findOne({ $or: dbCheck });
     if (findUser._id.toString() === _id) {
       return res.status(HTTP_ERROR_REQUEST).render("edit-profile", {
         pageTitle: "Edit Profile",
@@ -170,6 +170,17 @@ export const postEdit = async (req, res) => {
   );
   req.session.user = updateUser;
   return res.redirect("/users/edit");
+};
+
+export const getChangePw = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePw = (req, res) => {
+  //send notification
+  return res.redirect("/");
 };
 
 export const see = (req, res) => {
