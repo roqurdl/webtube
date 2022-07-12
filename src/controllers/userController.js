@@ -146,11 +146,12 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id, email: sessionEmail, username: sessionUsername },
+      user: { _id, email: sessionEmail, username: sessionUsername, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
-  let dbCheck = [];
+  /*let dbCheck = [];
   if (sessionEmail == email || sessionUsername == username) {
     dbCheck.push({ sessionEmail });
   }
@@ -162,10 +163,16 @@ export const postEdit = async (req, res) => {
         errorMessage: "This username/email is already taken.",
       });
     }
-  }
+  }*/
   const updateUser = await User.findByIdAndUpdate(
     _id,
-    { name, email, username, location },
+    {
+      avatarUrl: file ? file.path : avatarUrl,
+      name,
+      email,
+      username,
+      location,
+    },
     { new: true }
   );
   req.session.user = updateUser;
