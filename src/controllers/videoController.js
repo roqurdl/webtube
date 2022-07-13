@@ -1,4 +1,5 @@
 import Video from "../models/Video";
+import User from "../models/User";
 
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort({ createdAt: "desc" });
@@ -12,6 +13,37 @@ export const watch = async (req, res) => {
     return res.status(404).render("404", { pageTitle: "Video not found." });
   }
   return res.render(`watch`, { pageTitle: video.title, video });
+};
+
+export const getUpload = (req, res) => {
+  return res.render("upload", { pageTitle: `Uploading Video` });
+};
+export const postUpload = async (req, res) => {
+  const {
+    file: { path: fileUrl },
+    body: { title, description, hashtags },
+    session: {
+      user: { _id },
+    },
+  } = req;
+  try {
+    const newVideo = await Video.create({
+      title,
+      description,
+      fileUrl,
+      owner: _id,
+      hashtags: Video.formatHashtags(hashtags),
+    });
+    const user = await User.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
+    return res.redirect(`/`);
+  } catch (error) {
+    return res.status(400).render("upload", {
+      pageTitle: "Upload Video",
+      errorMessage: error._message,
+    });
+  }
 };
 
 export const getEdit = async (req, res) => {
@@ -35,34 +67,6 @@ export const postEdit = async (req, res) => {
     hashtags: Video.formatHashtags(hashtags),
   });
   return res.redirect(`/videos/${id}`);
-};
-
-export const getUpload = (req, res) => {
-  return res.render("upload", { pageTitle: `Uploading Video` });
-};
-export const postUpload = async (req, res) => {
-  const {
-    file: { path: fileUrl },
-    body: { title, description, hashtags },
-    session: {
-      user: { _id },
-    },
-  } = req;
-  try {
-    await Video.create({
-      title,
-      description,
-      fileUrl,
-      owner: _id,
-      hashtags: Video.formatHashtags(hashtags),
-    });
-    return res.redirect(`/`);
-  } catch (error) {
-    return res.status(400).render("upload", {
-      pageTitle: "Upload Video",
-      errorMessage: error._message,
-    });
-  }
 };
 
 export const deleteVideo = async (req, res) => {
