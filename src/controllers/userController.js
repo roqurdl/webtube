@@ -218,6 +218,14 @@ export const postChangePw = async (req, res) => {
   return res.redirect("/login");
 };
 
-export const see = (req, res) => {
-  res.render("See User");
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found" });
+  }
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+  });
 };
