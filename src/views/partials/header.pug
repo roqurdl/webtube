@@ -1,8 +1,10 @@
 header
-    a(href="/")
-        i.fab.fa-youtube
+    a(href="/").header__logo
     nav
         ul 
+            li
+                a(href="/search")
+                    i.fas.fa-search
             if loggedIn
                 li 
                    a(href="/videos/upload") Upload Video
@@ -13,12 +15,12 @@ header
                 li 
                     a(href="/users/logout") Log out
             else
-                if pageTitle !== "Join"
-                        li 
-                            a(href="/join") Join
                 if pageTitle !== "Login"
                         li 
                             a(href="/login") Login
+                if pageTitle !== "Join"
+                        li
+                            a(href="/join").header__btn  Join
             if pageTitle !== "Search Videos"
                 li 
                     a(href="/search") Search
