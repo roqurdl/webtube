@@ -76,24 +76,24 @@ const handleFullScreen = () => {
   }
 };
 
-const hideControls = () =>{
+const hideControls = () => {
   videoControls.classList.remove("showing");
-}
+};
 
 const handleMouseMove = () => {
   if (controlsTimeout) {
     clearTimeout(controlsTimeout);
     controlsTimeout = null;
   }
-  if{concontrolsMovement}{
+  if (controlsMovement) {
     clearTimeout(controlsMovement);
     controlsMovement = null;
   }
   videoControls.classList.add("showing");
-  controlsMovement=setTimeout(hideControls,2000);
+  controlsMovement = setTimeout(hideControls, 2000);
 };
 const handleMouseLeave = () => {
-  controlsTimeout = setTimeout(hideControls,2000);
+  controlsTimeout = setTimeout(hideControls, 2000);
 };
 
 playBtn.addEventListener("click", handlePlayClick);
