@@ -1,13 +1,13 @@
-import express, { application } from "express";
+import express from "express";
 import morgan from "morgan";
 import session from "express-session";
-import connect from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 import { localsMiddeware } from "./middlewares";
 import MongoStore from "connect-mongo";
 import { connection } from "mongoose";
+import apiRouter from "./routers/apiRouter";
 
 const app = express();
 const logger = morgan("dev");
@@ -34,5 +34,6 @@ app.use("/static", express.static("assets"));
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
+app.use("/api", apiRouter);
 
 export default app;

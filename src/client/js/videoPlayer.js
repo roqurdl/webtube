@@ -102,11 +102,16 @@ const handleMouseLeave = () => {
 };
 
 const handleKeyUp = (event) => {
-  // 70=f, 27=esc, 32=spacebar
+  // 32=spacebar
   const { keyCode } = event;
   if (keyCode === 32) {
     handlePlayClick();
   }
+};
+
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, { method: "POST" });
 };
 
 playBtn.addEventListener("click", handlePlayClick);
@@ -118,6 +123,7 @@ video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("mousemove", handleMouseMove);
 video.addEventListener("mouseleave", handleMouseLeave);
 video.addEventListener("click", handlePlayClick);
+video.addEventListener("ended", handleEnded);
 window.addEventListener("keyup", handleKeyUp);
 
 timeline.addEventListener("input", handleTimeLineChange);
