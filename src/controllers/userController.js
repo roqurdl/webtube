@@ -138,6 +138,7 @@ export const finishGithubLogin = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
+  req.flash("info", "Bye Byr");
   return res.redirect("/");
 };
 
@@ -182,6 +183,7 @@ export const postEdit = async (req, res) => {
 
 export const getChangePw = (req, res) => {
   if (req.session.user.socialOnly === true) {
+    req.flash("error", "Can't change password.");
     return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
@@ -215,6 +217,7 @@ export const postChangePw = async (req, res) => {
   }
   user.password = newPw;
   await user.save();
+  req.flash("info", "Password updated");
   req.session.destroy();
   return res.redirect("/login");
 };
