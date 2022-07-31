@@ -155,3 +155,24 @@ export const createComment = async (req, res) => {
   video.save();
   return res.status(201).json({ newCommentId: comment._id });
 };
+
+export const deleteComment = async (req, res) => {
+  const {
+    params: { id },
+    session: {
+      user: { _id },
+    },
+  } = req;
+  const comment = await Comment.findById(id);
+  if (!comment) {
+    return res
+      .status(HTML_ERROR)
+      .render("404", { pageTitle: "Comment not found." });
+  }
+  if (String(comment.owner) !== String(_id)) {
+    req.flash("error", "You do not have authority of delete.");
+    return res.status(403).redirect("/");
+  }
+  await Comment.findByIdAndDelete(id);
+  return res.status(200);
+};
