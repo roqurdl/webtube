@@ -6,7 +6,7 @@ block content
         if loggedInUser.socialOnly.toString().includes("github") 
             img(src=loggedInUser.avatarUrl, width="100", height="100").avatar
         else
-            img(src="/" + loggedInUser.avatarUrl, width="100", height="100").avatar
+            img(src=loggedInUser.avatarUrl, width="100", height="100").avatar
     h3=user.name
     div.video-grid
         each video in user.videos

@@ -153,23 +153,23 @@ export const postEdit = async (req, res) => {
     body: { name, email, username, location },
     file,
   } = req;
-  /*let dbCheck = [];
-  if (sessionEmail == email || sessionUsername == username) {
-    dbCheck.push({ sessionEmail });
-  }
-  if (dbCheck.length > 0) {
-    const findUser = await User.findOne({ $or: dbCheck });
-    if (findUser._id.toString() === _id) {
-      return res.status(HTTP_ERROR_REQUEST).render("edit-profile", {
-        pageTitle: "Edit Profile",
-        errorMessage: "This username/email is already taken.",
-      });
-    }
-  }*/
+  let dbCheck = [];
+  // if (sessionEmail == email || sessionUsername == username) {
+  //   dbCheck.push({ sessionEmail });
+  // }
+  // if (dbCheck.length > 0) {
+  //   const findUser = await User.findOne({ $or: dbCheck });
+  //   if (findUser._id.toString() === _id) {
+  //     return res.status(HTTP_ERROR_REQUEST).render("edit-profile", {
+  //       pageTitle: "Edit Profile",
+  //       errorMessage: "This username/email is already taken.",
+  //     });
+  //   }
+  // }
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
-      avatarUrl: file ? file.path : avatarUrl,
+      avatarUrl: file ? file.location : avatarUrl,
       name,
       email,
       username,

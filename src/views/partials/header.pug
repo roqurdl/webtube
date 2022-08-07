@@ -17,7 +17,7 @@ header
                         if loggedInUser.socialOnly.toString().includes("github") 
                             img(src=loggedInUser.avatarUrl, width="100", height="100").header__avatar
                         else
-                            img(src="/"+loggedInUser.avatarUrl, width="100", height="100").header__avatar
+                            img(src=loggedInUser.avatarUrl, width="100", height="100").header__avatar
                 li 
                     a(href="/users/edit") Edit Profile
                 li 
